@@ -1,11 +1,15 @@
 # Virtual-Fitting
 
 우선 목표 - 컴퓨터 비전 기능 사용해서 가상 피팅 서비스 개발 + 배포는 웹앱
+
 최종 목표 - AR 기능 추가
 
 FE - React.js
+
 BE - FastAPI / OpenCV + Mediapipe
+
 DB - MySQL
+
 Cloud
 
 1. 사용자 관리 시스템 - BE
