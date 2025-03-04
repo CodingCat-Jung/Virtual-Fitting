@@ -1,13 +1,11 @@
-
+version: '3'
 services:
   demo-app:
     build: .
-    container_name: demo_app
     volumes:
       - .dockervenv:/src/.venv
-      - .:/src
+      - .:/src  # 현재 경로를 /src로 마운트
     ports:
       - "8000:8000"
     environment:
       - WATCHFILES_FORCE_POLLING=true
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
