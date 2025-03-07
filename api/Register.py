@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel, EmailStr
 from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -8,7 +8,8 @@ import jwt
 import datetime
 
 # 데이터베이스 설정 (MySQL)
-DATABASE_URL = "mysql+pymysql://root:qkrwogus1205!@localhost:3306/Virtual-Fitiing"
+# localhost 대신 Docker 서비스 이름 "db" 사용
+DATABASE_URL = "mysql+pymysql://root:qkrwogus1205!@db:3306/Virtual-Fitting"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -17,8 +18,8 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
+    email = Column(String(255), unique=True, index=True)
+    hashed_password = Column(String(255))
 
 # 데이터베이스 생성
 Base.metadata.create_all(bind=engine)
@@ -36,15 +37,15 @@ def get_db():
     finally:
         db.close()
 
-# FastAPI 앱 생성
-app = FastAPI()
+# FastAPI 라우터 생성 (FastAPI()가 아닌 APIRouter() 사용)
+router = APIRouter()
 
 # 비밀번호 해싱 함수
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 # 회원가입 API
-@app.post("/register")
+@router.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
     # 이메일 중복 확인
     db_user = db.query(User).filter(User.email == user.email).first()
