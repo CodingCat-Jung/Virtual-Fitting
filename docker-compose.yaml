@@ -1,3 +1,4 @@
+version: "3.8"
 
 services:
   demo-app:
@@ -9,17 +10,37 @@ services:
       - "8000:8000"
     environment:
       - WATCHFILES_FORCE_POLLING=true
+    depends_on:
+      - db
 
   db:
     image: mysql:8.0
+    container_name: mysql_container
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 'qkrwogus1205!'
-      MYSQL_DATABASE: 'Virtual-Fitting'
+      MYSQL_DATABASE: 'Virtual_Fitting'
+      MYSQL_USER: 'fastapi_user'
+      MYSQL_PASSWORD: 'fastapi_password'
       TZ: 'Asia/Seoul'
     volumes:
       - mysql_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     ports:
-      - 33306:3306
+      - "33306:3306"
+
+  fastapi:
+    build: .
+    container_name: fastapi_container
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "mysql+aiomysql://root:qkrwogus1205!@db:3306/Virtual_Fitting"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
 volumes:
   mysql_data:

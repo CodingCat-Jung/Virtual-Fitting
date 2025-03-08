@@ -1,15 +1,15 @@
-# Python 3.10 기반 이미지 사용
-FROM python:3.11-buster
+# 1. Python 3.10 기반 이미지 사용
+FROM python:3.10
 
-ENV PYTHONUNBUFFERED = 1
-# 작업 디렉토리 설정
-WORKDIR /src
+# 2. 작업 디렉토리 설정
+WORKDIR /app
 
-RUN pip install "poetry==1.6.1"
+# 3. 필요한 패키지 설치
+COPY pyproject.toml poetry.lock ./
+RUN pip install poetry && poetry install --no-root
 
-COPY pyproject.toml* poetry.lock* ./
+# 4. 애플리케이션 코드 복사
+COPY . .
 
-RUN poetry config virtualenvs.in-project true
-RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
-
-ENTRYPOINT ["poetry", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--reload"]
+# 5. FastAPI 서버 실행
+CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
