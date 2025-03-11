@@ -6,7 +6,7 @@ app = FastAPI(title="User API")
 # 사용자 라우터 등록
 app.include_router(user.router)
 
-# 기본 루트 추가 (테스트용)
+# 기본 루트 추가 (테스트용
 @app.get("/")
 def root():
     return {"message": "FastAPI 서버가 정상적으로 실행 중입니다!"}
