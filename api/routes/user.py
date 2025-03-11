@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from api.database.database import get_db
 from api.models.user import User
 from api.schemas.user import UserCreate
+from api.utils.jwt import get_current_user
 from api.utils.hashing import get_password_hash
 
 router = APIRouter(
@@ -39,3 +40,8 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
             "email": new_user.email
         }
     }
+
+#  로그인한 사용자만 접근 가능한 API
+@router.get("/users/me")
+def read_users_me(current_user: User = Depends(get_current_user)):
+    return {"email": current_user.useremail, "username": current_user.username}
