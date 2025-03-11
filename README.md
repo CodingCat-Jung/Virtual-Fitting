@@ -1,5 +1,9 @@
 # Virtual-Fitting
 
+## 노션 링크
+
+https://www.notion.so/1b0825f7b37880c9b84ade67e220d8e0?v=1b0825f7b3788160ad4f000c7d9b216e
+
 ## 📌 커밋 메시지 규칙
 
 프로젝트의 일관된 커밋 메시지 규칙을 유지하기 위해 아래의 규칙을 따릅니다.
