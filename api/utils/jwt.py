@@ -13,6 +13,7 @@ load_dotenv()
 #  환경 변수에서 SECRET_KEY 가져오기
 SECRET_KEY = os.getenv("SECRET_KEY", "your_default_secret_key")  # 기본값은 보안상 위험하니 .env 설정 필수
 ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30  # 기본값 설정
 
 # FastAPI의 OAuth2PasswordBearer를 사용하여 "Authorization: Bearer <token>" 방식 지원
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
@@ -27,7 +28,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-    user = db.query(User).filter(User.useremail == email).first()
+    user = db.query(User).filter(User.email == email).first()
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
     
